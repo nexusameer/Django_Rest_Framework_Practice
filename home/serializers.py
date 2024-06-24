@@ -1,5 +1,17 @@
 from rest_framework import serializers
 from .models import *
+from django.contrib.auth.models import User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+    
+    def create(self, validated_data):
+        user = User.objects.create(username = validated_data['username'])
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 class StudentSerializer(serializers.ModelSerializer):
 
@@ -20,14 +32,14 @@ class StudentSerializer(serializers.ModelSerializer):
         
         return data
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['name',]
+# class CategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Category
+#         fields = ['name',]
     
-class BookSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
-    class Meta:
-        model = Book
-        fields = '__all__'
-        depth = 1
+# class BookSerializer(serializers.ModelSerializer):
+#     category = CategorySerializer()
+#     class Meta:
+#         model = Book
+#         fields = '__all__'
+#         depth = 1

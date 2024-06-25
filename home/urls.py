@@ -11,5 +11,8 @@ urlpatterns=[
 
     path('student/', StudentAPI.as_view()),
     path('register/', RegisterUser.as_view()),
+    path('student_generic/', StudentGeneric.as_view()),
+    path('student_generic1/<id>/', StudentGeneric1.as_view()),
+    path('excel/', ExportImportExcel.as_view())
     
 ]

@@ -22,3 +22,7 @@ class Book(models.Model):
 
     def __str__(self):
         return self.book_title
+
+
+class ExelFileUpload(models.Model):
+    excel_file_updload = models.FileField(upload_to='excel')

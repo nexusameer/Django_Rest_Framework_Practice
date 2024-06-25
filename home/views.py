@@ -9,6 +9,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import generics
+import pandas as pd
+import uuid
 # Create your views here.
 
 # @api_view(['GET'])
@@ -119,3 +122,35 @@ class RegisterUser(APIView):
         refresh = RefreshToken.for_user(user)
         return Response({'status':200, 'payload':serializer.data, 'refresh': str(refresh),
         'access': str(refresh.access_token)})
+
+
+class StudentGeneric(generics.ListAPIView, generics.CreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+class StudentGeneric1(generics.UpdateAPIView, generics.DestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    lookup_field = 'id'
+
+
+class ExportImportExcel(APIView):
+    def get(self, request):
+        student_objs = Student.objects.all()
+        serializer = StudentSerializer(student_objs, many=True)
+
+        df = pd.DataFrame(serializer.data)
+        print(df)
+        df.to_csv(
+            f'{uuid.uuid4()}.csv', 
+            encoding='UTF-8')
+        return Response({'status': 200})
+    
+    def post(self, request):
+        # excel_updload_obj = ExelFileUpload.objects.create(excel_file_updload=request.FILES[''])
+        # df = pd.read_csv(f'{excel_updload_obj.excel_file_updload}')
+        # print(df.values.tolist())
+        # print(request.FILES)
+
+        return Response({'status': 200})
